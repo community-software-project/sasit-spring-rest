@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="oxygenfactory.com.sasit.module.oxygen.pickupCode.dao.PickupCodeDao">
+    
+    <insert id="saveExpressPickupCode" parameterType="java.util.Map">
+        INSERT INTO td_customer_barcode_service (
+		 EXPRESS_ID,
+		 BAR_CODE,
+		 AREA_CODE,
+		 SERVICE_SHOP_CODE,
+		 TIMESTAMP_SPE,
+		 OPERA_TIME,
+		 OPERATOR,
+		 REMARK,
+		 ORDER_CODE
+		) values (
+		 #{expressId,jdbcType=NUMERIC},
+		 #{barCode,jdbcType=VARCHAR},
+		 #{areaCode,jdbcType=VARCHAR},
+		 #{serviceShopCode,jdbcType=VARCHAR},
+		 #{timestampSpe,jdbcType=VARCHAR},
+		 #{operaTime},
+		 #{operator,jdbcType=VARCHAR},
+		 #{remark,jdbcType=VARCHAR},
+		 #{orderCode,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+</mapper>

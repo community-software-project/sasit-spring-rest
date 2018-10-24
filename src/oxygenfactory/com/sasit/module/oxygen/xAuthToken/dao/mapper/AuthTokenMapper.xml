@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="oxygenfactory.com.sasit.module.oxygen.xAuthToken.dao.AuthTokenDao">
+    
+    <select id="getAuthTokenInfo" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.xAuthToken.entity.AuthTokenInfo">
+        select 
+		 ID id,
+		 PHONE_NUMBER phoneNumber,
+		 LOGIN_NAME loginName,
+		 X_AUTH_TOKEN xAuthToken,
+		 TOKEN_TYPE tokenType,
+		 LIMIT_TIME limitTime
+		FROM SYS_AUTH_TOKEN
+    </select>
+    
+    <select id="getAuthTokenByPhone" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.xAuthToken.entity.AuthTokenInfo">
+        select 
+		 ID id,
+		 PHONE_NUMBER phoneNumber,
+		 LOGIN_NAME loginName,
+		 X_AUTH_TOKEN xAuthToken,
+		 TOKEN_TYPE tokenType,
+		 LIMIT_TIME limitTime
+		FROM SYS_AUTH_TOKEN
+		WHERE PHONE_NUMBER = #{phoneNumber}
+    </select>
+    
+    <insert id="insertAuthTokenInfo" parameterType="oxygenfactory.com.sasit.module.oxygen.xAuthToken.entity.AuthTokenInfo">
+        INSERT INTO sys_auth_token(
+		 ID,
+		 PHONE_NUMBER,
+		 LOGIN_NAME,
+		 X_AUTH_TOKEN,
+		 TOKEN_TYPE,
+		 LIMIT_TIME
+		) values (
+		 #{id,jdbcType=NUMERIC},
+		 #{phoneNumber,jdbcType=VARCHAR},
+		 #{loginName,jdbcType=VARCHAR},
+		 #{xAuthToken,jdbcType=VARCHAR},
+		 #{tokenType,jdbcType=VARCHAR},
+		 #{limitTime,jdbcType=NUMERIC}
+		)
+    </insert>
+    
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="oxygenfactory.com.sasit.module.oxygen.express.dao.ExpressDao">
+    
+    <select id="findExpress" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+		SELECT 
+		 te.ID id,
+		 te.LOGISTICS logistics,
+		 te.CODE code,
+		 te.RECIPIENT_NAME recipientName,
+		 te.PHONE_NUMBER phoneNumber,
+		 te.LANDLINE_NUMBER landlineNumber,
+		 te.EXPRESS_SERVICE_ID expressServiceId,
+		 esp.NAME expressServiceName,
+		 te.ADDRESS address,
+		 te.REMARK remark,
+		 te.BATCH_NUMBER batchNumber,
+		 date_format(te.OPERA_TIME,'%Y-%m-%d') operaTime,
+		 te.AREA_CODE areaCode,
+		 te.SERVICE_SHOP_CODE serviceShopCode,
+		 ts.NAME serviceShopName,
+		 te.OPERATOR operator,
+		 te.EXPRESS_lOCATION expressLocation
+		FROM tf_express_info te
+		LEFT JOIN tf_shop_info ts on ts.SHOP_CODE = te.SERVICE_SHOP_CODE
+		left join tf_express_service_provider_info esp on esp.ID = te.EXPRESS_SERVICE_ID
+		WHERE te.PHONE_NUMBER = #{phoneNumber}
+    </select>
+    
+    <select id="getExpressLocation" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT nextvalByShopCode(#{type},#{serviceShopCode}) current_value
+    </select>
+    
+    <insert id="addExpress" parameterType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+        INSERT INTO tf_express_info (
+		 LOGISTICS,
+		 CODE,
+		 RECIPIENT_NAME,
+		 PHONE_NUMBER,
+		 LANDLINE_NUMBER,
+		 EXPRESS_SERVICE_ID,
+		 ADDRESS,
+		 REMARK,
+		 BATCH_NUMBER,
+		 OPERA_TIME,
+		 AREA_CODE,
+		 SERVICE_SHOP_CODE,
+		 OPERATOR,
+		 EXPRESS_lOCATION
+		) values (
+		 #{logistics,jdbcType=VARCHAR},
+		 #{code,jdbcType=VARCHAR},
+		 #{recipientName,jdbcType=VARCHAR},
+		 #{phoneNumber,jdbcType=VARCHAR},
+		 #{landlineNumber,jdbcType=VARCHAR},
+		 #{expressServiceId,jdbcType=NUMERIC},
+		 #{address,jdbcType=VARCHAR},
+		 #{remark,jdbcType=VARCHAR},
+		 #{batchNumber,jdbcType=VARCHAR},
+		 #{operaTime},
+		 #{areaCode,jdbcType=VARCHAR},
+		 #{serviceShopCode,jdbcType=VARCHAR},
+		 #{operator,jdbcType=VARCHAR},
+		 #{expressLocation,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <select id="selfHandleExpressDelivery" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+		SELECT 
+		 te.ID id,
+		 te.LOGISTICS logistics,
+		 te.CODE code,
+		 te.RECIPIENT_NAME recipientName,
+		 te.PHONE_NUMBER phoneNumber,
+		 te.LANDLINE_NUMBER landlineNumber,
+		 te.EXPRESS_SERVICE_ID expressServiceId,
+		 esp.NAME expressServiceName,
+		 te.ADDRESS address,
+		 te.REMARK remark,
+		 te.BATCH_NUMBER batchNumber,
+		 date_format(te.OPERA_TIME,'%Y-%m-%d') operaTime,
+		 te.AREA_CODE areaCode,
+		 te.SERVICE_SHOP_CODE serviceShopCode,
+		 ts.NAME serviceShopName,
+		 te.OPERATOR operator,
+		 te.EXPRESS_lOCATION expressLocation
+		FROM tf_express_info te
+		LEFT JOIN tf_shop_info ts on ts.SHOP_CODE = te.SERVICE_SHOP_CODE
+		left join tf_express_service_provider_info esp on esp.ID = te.EXPRESS_SERVICE_ID
+		WHERE te.OPERATOR = #{operator} and te.SERVICE_SHOP_CODE = #{serviceShopCode}
+    </select>
+    
+    <select id="customersExpressCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM tf_express_info WHERE PHONE_NUMBER = #{phoneNumber}
+    </select>
+    
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="oxygenfactory.com.sasit.module.oxygen.expressProviders.dao.ExpressProvidersDao">
+    
+    <select id="getExpressProvidersInfo" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.expressProviders.entity.ExpressProvidersInfo">
+        SELECT 
+		 ID id,
+		 NAME name,
+		 CODE code,
+		 REMARK remark,
+		 LOGO logo,
+		 TYPE type,
+		 ORDER_BY orderBy,
+		 CONTACTS contacts,
+		 PHONE_NUMBER phoneNumber,
+		 AREA_CODE areaCode,
+		 SERVICE_SHOP_CODE serviceShopCode
+		FROM TF_EXPRESS_SERVICE_PROVIDER_INFO
+		WHERE TYPE = #{type}
+		ORDER BY ORDER_BY
+    </select>
+    
+    <select id="getExpressProviderContacts" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.expressProviders.entity.ExpressProviderContacts">
+        SELECT 
+		 ID id,
+		 NAME name,
+		 PHONE_NUMBER phoneNumber,
+		 AREA_CODE areaCode,
+		 SERVICE_SHOP_CODE serviceShopCode,
+		 TYPE type,
+		 REMARK remark,
+		 PROVIDER_ID providerId
+		FROM TF_EXPRESS_SERVICE_PROVIDER_CONTACTS
+		WHERE PROVIDER_ID = #{providerId} and TYPE = #{type}
+    </select>
+    
+    
+    <select id="checkProvidersContacts" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.expressProviders.entity.ExpressProviderContacts">
+        SELECT 
+		 ID id,
+		 NAME name,
+		 PHONE_NUMBER phoneNumber,
+		 AREA_CODE areaCode,
+		 SERVICE_SHOP_CODE serviceShopCode,
+		 TYPE type,
+		 REMARK remark,
+		 PROVIDER_ID providerId
+		FROM TF_EXPRESS_SERVICE_PROVIDER_CONTACTS
+		WHERE PHONE_NUMBER = #{phoneNumber} 
+			and SERVICE_SHOP_CODE = #{serviceShopCode}
+			and TYPE = #{type}
+    </select>
+    
+</mapper>

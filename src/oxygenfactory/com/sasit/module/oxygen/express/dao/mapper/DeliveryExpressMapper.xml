@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="oxygenfactory.com.sasit.module.oxygen.express.dao.DeliveryExpressDao">
+    
+    <select id="getExpressListByBarCode" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+		select
+			b.ID id,
+			a.BAR_CODE barCode,
+			b.PHONE_NUMBER phoneNumber,
+			b.RECIPIENT_NAME recipientName,
+			a.SERVICE_SHOP_CODE serviceShopCode,
+			b.EXPRESS_lOCATION expressLocation,
+			b.LOGISTICS logistics,
+			a.OPERA_TIME operaTime,
+			sp.NAME expressServiceName
+		from td_customer_barcode_service a 
+		Inner join tf_express_info b on b.id = a.express_id
+		left join td_barcode_basket_number c on c.BAR_CODE = a.BAR_CODE
+		left join tf_express_service_provider_info sp on sp.ID = b.EXPRESS_SERVICE_ID
+		where 1=1 and a.BAR_CODE = #{barCode}
+		and date_format(a.opera_time,'%Y%c%d') = date_format(now(),'%Y%c%d');
+    </select>
+    
+    <select id="getExpressListByPhoneNumber" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+		select
+			a.ID id,
+			a.PHONE_NUMBER phoneNumber,
+			a.RECIPIENT_NAME recipientName,
+			a.SERVICE_SHOP_CODE serviceShopCode,
+			a.EXPRESS_lOCATION expressLocation,
+			a.LOGISTICS logistics,
+			a.OPERA_TIME operaTime,
+			sp.NAME expressServiceName
+		from tf_express_info a 
+		left join tf_express_service_provider_info sp on sp.ID = a.EXPRESS_SERVICE_ID
+		where a.PHONE_NUMBER = #{phoneNumber} or substring(a.PHONE_NUMBER, 7, 5)  = #{shortPhoneNumber}
+    </select>
+    
+    <delete id="outExpressOperation" parameterType="java.util.Map">
+        delete from TF_EXPRESS_INFO where id = #{id}
+    </delete>
+    
+    <insert id="letExpressInLogTable" parameterType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+        INSERT INTO TF_EXPRESS_OUT_STOREHOUSE (
+		 LOGISTICS,
+		 IN_EXPRESS_ID,
+		 CODE,
+		 RECIPIENT_NAME,
+		 PHONE_NUMBER,
+		 LANDLINE_NUMBER,
+		 EXPRESS_SERVICE_ID,
+		 ADDRESS,
+		 REMARK,
+		 BATCH_NUMBER,
+		 OUT_BATCH_NUMBER,
+		 OPERA_TIME,
+		 OUT_OPERA_TIME,
+		 AREA_CODE,
+		 SERVICE_SHOP_CODE,
+		 OPERATOR,
+		 EXPRESS_lOCATION
+		) values (
+		 #{logistics,jdbcType=VARCHAR},
+		 #{id,jdbcType=NUMERIC},
+		 #{code,jdbcType=VARCHAR},
+		 #{recipientName,jdbcType=VARCHAR},
+		 #{phoneNumber,jdbcType=VARCHAR},
+		 #{landlineNumber,jdbcType=VARCHAR},
+		 #{expressServiceId,jdbcType=NUMERIC},
+		 #{address,jdbcType=VARCHAR},
+		 #{remark,jdbcType=VARCHAR},
+		 #{batchNumber,jdbcType=VARCHAR},
+		 #{outBatchNumber,jdbcType=VARCHAR},
+		 #{operaTime},
+		 #{outOperaTime},
+		 #{areaCode,jdbcType=VARCHAR},
+		 #{serviceShopCode,jdbcType=VARCHAR},
+		 #{operator,jdbcType=VARCHAR},
+		 #{expressLocation,jdbcType=VARCHAR}
+		)
+    </insert>
+    
+    <select id="getExpressById" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.express.entity.ExpressInfo">
+        select 
+		 ID id,
+		 LOGISTICS logistics,
+		 CODE code,
+		 RECIPIENT_NAME recipientName,
+		 PHONE_NUMBER phoneNumber,
+		 LANDLINE_NUMBER landlineNumber,
+		 EXPRESS_SERVICE_ID expressServiceId,
+		 ADDRESS address,
+		 REMARK remark,
+		 BATCH_NUMBER batchNumber,
+		 OPERA_TIME operaTime,
+		 AREA_CODE areaCode,
+		 SERVICE_SHOP_CODE serviceShopCode,
+		 OPERATOR operator,
+		 EXPRESS_lOCATION expressLocation
+		from tf_express_info
+		where id = #{id}
+    </select>
+</mapper>

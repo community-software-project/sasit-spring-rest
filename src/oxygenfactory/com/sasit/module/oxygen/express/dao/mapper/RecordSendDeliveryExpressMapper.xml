@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="oxygenfactory.com.sasit.module.oxygen.express.dao.RecordSendExpressDao">
+    
+    <insert id="recordSendExpressInfo" parameterType="oxygenfactory.com.sasit.module.oxygen.express.entity.RecordSendExpressInfo">
+        INSERT INTO tf_sent_express_info (
+		 LOGISTICS,
+		 CODE,
+		 RECIPIENT_NAME,
+		 PHONE_NUMBER,
+		 LANDLINE_NUMBER,
+		 SENDER_NAME,
+		 ID_NUMBER,
+		 SENDER_NUMBER,
+		 SENDER_LANDLINE_NUMBER,
+		 EXPRESS_SERVICE_ID,
+		 ADDRESS,
+		 DESTINATION,
+		 OPERA_TIME,
+		 AREA_CODE,
+		 SERVICE_SHOP_CODE,
+		 OPERATOR,
+		 EXPRESS_lOCATION,
+		 WEIGHT,
+		 DIMENSIONS,
+		 REMARK,
+		 RES,
+		 TYPE,
+		 PRICE
+		) values (
+		 #{logistics,jdbcType=VARCHAR},
+		 #{code,jdbcType=VARCHAR},
+		 #{recipientName,jdbcType=VARCHAR},
+		 #{phoneNumber,jdbcType=VARCHAR},
+		 #{landlineNumber,jdbcType=VARCHAR},
+		 #{senderName,jdbcType=VARCHAR},
+		 #{idNumber,jdbcType=VARCHAR},
+		 #{senderNumber,jdbcType=VARCHAR},
+		 #{senderLandlineNumber,jdbcType=VARCHAR},
+		 #{expressServiceId,jdbcType=NUMERIC},
+		 #{address,jdbcType=VARCHAR},
+		 #{destination,jdbcType=VARCHAR},
+		 #{operaTime},
+		 #{areaCode,jdbcType=VARCHAR},
+		 #{serviceShopCode,jdbcType=VARCHAR},
+		 #{operator,jdbcType=VARCHAR},
+		 #{expressLocation,jdbcType=VARCHAR},
+		 #{weight,jdbcType=VARCHAR},
+		 #{dimensions,jdbcType=VARCHAR},
+		 #{remark,jdbcType=VARCHAR},
+		 #{res,jdbcType=VARCHAR},
+		 #{type,jdbcType=VARCHAR},
+		 #{price,jdbcType=NUMERIC}
+		)
+    </insert>
+    
+    <select id="currentMonthSendExpressList" parameterType="java.util.Map" resultType="oxygenfactory.com.sasit.module.oxygen.express.entity.RecordSendExpressInfo">
+        select 	
+        	ts.ID id,
+			ts.LOGISTICS logistics,
+			ts.EXPRESS_SERVICE_ID expressServiceId,
+			sp.NAME expressServiceName,
+			date_format(ts.OPERA_TIME,'%Y-%c-%d') operaTime,
+			ts.AREA_CODE areaCode,
+			ts.SERVICE_SHOP_CODE serviceShopCode,
+			si.NAME serviceShopName,
+			ts.OPERATOR operator,
+			ts.PRICE price
+		from tf_sent_express_info ts
+		left join tf_express_service_provider_info sp on sp.ID = ts.EXPRESS_SERVICE_ID
+		left join tf_shop_info si on si.SHOP_CODE = ts.SERVICE_SHOP_CODE
+		where 1=1
+        <![CDATA[
+			and STR_TO_DATE(date_format(OPERA_TIME,'%Y-%c-%d'),"%Y-%m-%d") >= #{startDate}
+			and STR_TO_DATE(date_format(OPERA_TIME,'%Y-%c-%d'),"%Y-%m-%d") <= #{endDate}
+			and ts.SERVICE_SHOP_CODE = #{shopCode}
+			and ts.EXPRESS_SERVICE_ID = #{providerId}
+		]]>
+    </select>
+    
+</mapper>
